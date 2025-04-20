@@ -28,6 +28,8 @@ function reloadAfterthreeSeconds() {
     location.reload(); 
   }, 3000); 
 }
+
+
 function Createplayer(name, letter) {
   return { name, letter };
 }
@@ -183,66 +185,102 @@ function startGame() {
     }
   }
 }
-function computerplaying() {
-  if (tryPlaySmartMove(player2.letter)) return;
-
-  if (tryPlaySmartMove(player1.letter)) return;
-
-  if (GameBoardArray[1][1] === "-") {
-    buttons[1][1].click();
-    return;
+function minimax(board, depth, isMaximizing) {
+  const result = getWinner();
+  if (result !== null) {
+    if (result === player2.letter) return 10 - depth;
+    if (result === player1.letter) return depth - 10;
+    if (result === "draw") return 0;
   }
 
-  const corners = [[0,0], [0,2], [2,0], [2,2]];
-  for (let [i, j] of corners) {
-    if (GameBoardArray[i][j] === "-") {
-      buttons[i][j].click();
-      return;
-    }
-  }
-
-  for (let i = 0; i < 3; i++) {
-    for (let j = 0; j < 3; j++) {
-      if (GameBoardArray[i][j] === "-") {
-        buttons[i][j].click();
-        return;
+  if (isMaximizing) {
+    let bestScore = -Infinity;
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 3; j++) {
+        if (board[i][j] === "-") {
+          board[i][j] = player2.letter;
+          let score = minimax(board, depth + 1, false);
+          board[i][j] = "-";
+          bestScore = Math.max(score, bestScore);
+        }
       }
     }
+    return bestScore;
+  } else {
+    let bestScore = Infinity;
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 3; j++) {
+        if (board[i][j] === "-") {
+          board[i][j] = player1.letter;
+          let score = minimax(board, depth + 1, true);
+          board[i][j] = "-";
+          bestScore = Math.min(score, bestScore);
+        }
+      }
+    }
+    return bestScore;
   }
 }
-function tryPlaySmartMove(letter) {
+function getWinner() {
   for (let i = 0; i < 3; i++) {
-    if (GameBoardArray[i].filter(cell => cell === letter).length === 2 &&
-        GameBoardArray[i].includes("-")) {
-      const j = GameBoardArray[i].indexOf("-");
-      buttons[i][j].click();
-      return true;
-    }
-
-    let col = [GameBoardArray[0][i], GameBoardArray[1][i], GameBoardArray[2][i]];
-    if (col.filter(cell => cell === letter).length === 2 && col.includes("-")) {
-      const j = col.indexOf("-");
-      buttons[j][i].click();
-      return true;
+    if (GameBoardArray[i][0] !== "-" &&
+        GameBoardArray[i][0] === GameBoardArray[i][1] &&
+        GameBoardArray[i][1] === GameBoardArray[i][2]) {
+      return GameBoardArray[i][0];
     }
   }
 
-  let mainDiag = [GameBoardArray[0][0], GameBoardArray[1][1], GameBoardArray[2][2]];
-  if (mainDiag.filter(cell => cell === letter).length === 2 && mainDiag.includes("-")) {
-    const idx = mainDiag.indexOf("-");
-    buttons[idx][idx].click();
-    return true;
+  for (let j = 0; j < 3; j++) {
+    if (GameBoardArray[0][j] !== "-" &&
+        GameBoardArray[0][j] === GameBoardArray[1][j] &&
+        GameBoardArray[1][j] === GameBoardArray[2][j]) {
+      return GameBoardArray[0][j];
+    }
   }
 
-  let antiDiag = [GameBoardArray[0][2], GameBoardArray[1][1], GameBoardArray[2][0]];
-  if (antiDiag.filter(cell => cell === letter).length === 2 && antiDiag.includes("-")) {
-    const idx = antiDiag.indexOf("-");
-    buttons[idx][2 - idx].click();
-    return true;
+  if (GameBoardArray[0][0] !== "-" &&
+      GameBoardArray[0][0] === GameBoardArray[1][1] &&
+      GameBoardArray[1][1] === GameBoardArray[2][2]) {
+    return GameBoardArray[0][0];
   }
 
-  return false;
+  if (GameBoardArray[0][2] !== "-" &&
+      GameBoardArray[0][2] === GameBoardArray[1][1] &&
+      GameBoardArray[1][1] === GameBoardArray[2][0]) {
+    return GameBoardArray[0][2];
+  }
+
+  if (GameBoardArray.flat().every(cell => cell !== "-")) {
+    return "draw";
+  }
+
+  return null;
 }
+
+function computerplaying() {
+ 
+    let bestScore = -Infinity;
+    let move;
+  
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 3; j++) {
+        if (GameBoardArray[i][j] === "-") {
+          GameBoardArray[i][j] = player2.letter;
+          let score = minimax(GameBoardArray, 0, false);
+          GameBoardArray[i][j] = "-";
+          if (score > bestScore) {
+            bestScore = score;
+            move = { i, j };
+          }
+        }
+      }
+    }
+  
+    if (move) {
+      buttons[move.i][move.j].click();
+    }
+  }
+  
 const twoplayers=document.querySelector("#twoPlayers");
 twoplayers.addEventListener("click",function(){
   computer.disabled=true;
