@@ -23,7 +23,11 @@ let GameBoardArray = [
   ["-", "-", "-"],
   ["-", "-", "-"]
 ];
-
+function reloadAfterthreeSeconds() {
+  setTimeout(() => {
+    location.reload(); 
+  }, 3000); 
+}
 function Createplayer(name, letter) {
   return { name, letter };
 }
@@ -95,11 +99,13 @@ function handleClick(i, j, button) {
     if (iswin()) {
       alert(`${currentPlayer.name} wins! 🎉`);
       disableAllButtons();
+      reloadAfterthreeSeconds();
       return;
     }
 
     if (isDraw()) {
       alert("It's a draw!");
+      reloadAfterthreeSeconds();
       return;
     }
 
@@ -132,11 +138,13 @@ function handleClickwithComputer(i, j, button) {
     if (iswin()) {
       alert(`${currentPlayer.name} wins! 🎉`);
       disableAllButtons();
+      reloadAfterthreeSeconds();
       return;
     }
 
     if (isDraw()) {
       alert("It's a draw!");
+      reloadAfterthreeSeconds();
       return;
     }
 
