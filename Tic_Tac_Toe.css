@@ -1,0 +1,76 @@
+body {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    height: 85vh;
+    width: 85vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-left: 100px;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+
+
+}
+
+button {
+    width: 180px;
+    height: 130px;
+    box-sizing: border-box;
+    font-size: xx-large;
+    font-weight: bold;
+    cursor: crosshair;
+}
+.ButtonChoicesContainer {
+    display: flex;
+    background-color: #FF4F58; 
+    width: 320px;
+    height: auto; 
+    padding: 10px;
+    border-radius: 15px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    text-align: center;
+}
+
+#twoPlayers, #VsComputer {
+    width: 100%;
+    height: 50px;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    padding: 10px 0; 
+    cursor: pointer;
+    color: black; 
+    background-color: #667eea; 
+    border: none;
+    border-radius: 10px; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+    transition: background-color 0.3s ease, transform 0.2s ease; 
+    font-family: 'Arial', sans-serif; 
+    margin: 10px;
+}
+
+#twoPlayers:hover, #VsComputer:hover {
+    background-color: #5e6be3; 
+    transform: translateY(-3px); 
+}
+
+#twoPlayers:active, #VsComputer:active {
+    transform: translateY(2px); 
+}
+
+#twoPlayers:focus, #VsComputer:focus {
+    outline: none; 
+    box-shadow: 0 0 0 2px #667eea; 
+}
+#twoPlayers:active {
+    background-color: red;
+}
+
